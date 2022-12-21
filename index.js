@@ -1,20 +1,25 @@
 const http = require("http");
 
 const websiteUrl = "http://live.bazm.org:9002/live";
-try {
-    http.get(websiteUrl, (res) => {
-        const statusCode = res.statusCode;
-        console.log({ statusCode });
-        return { statusCode };
-    })
-        .on("error", (error) => {
-            console.log({ statusCode: 500 });
-            return { statusCode: 500 };
+http.createServer(function (req, res) {
+    console.log(`Just got a request at ${req.url}!`)
+
+    try {
+        http.get(websiteUrl, (res) => {
+            const statusCode = res.statusCode;
+            console.log({ statusCode });
+            res.write({ statusCode });
+        })
+            .on("error", (error) => {
+                console.log({ statusCode: 500 });
+                res.write({ statusCode: 500 });
+            });
+    } catch (error) {
+        console.log(error);
+        res.write({
+            statusCode: 500,
+            body: JSON.stringify({ error: "Failed fetching the link." }),
         });
-} catch (error) {
-    console.log(error);
-    return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Failed fetching the link." }),
-    };
-}
+    }
+    res.end();
+}).listen(process.env.PORT || 3000);
