@@ -8,18 +8,21 @@ http.createServer(function (req, res) {
         http.get(websiteUrl, (res) => {
             const statusCode = res.statusCode;
             console.log({ statusCode });
-            res.send({ statusCode });
+            res.sendStatus(statusCode)
+            res.send(JSON.stringify({ statusCode }));
         })
             .on("error", (error) => {
                 console.log({ statusCode: 500 });
-                res.send({ statusCode: 500 });
+                res.sendStatus(500)
+                res.send(JSON.stringify({ statusCode: 500 }));
             });
     } catch (error) {
         console.log(error);
-        res.send({
+        res.sendStatus(statusCode);
+        res.send(JSON.stringify({
             statusCode: 500,
             body: JSON.stringify({ error: "Failed fetching the link." }),
-        });
+        }));
     }
     res.end();
 }).listen(process.env.PORT || 3000);
