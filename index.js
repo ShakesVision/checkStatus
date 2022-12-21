@@ -8,15 +8,15 @@ http.createServer(function (req, res) {
         http.get(websiteUrl, (res) => {
             const statusCode = res.statusCode;
             console.log({ statusCode });
-            res.write({ statusCode });
+            res.send({ statusCode });
         })
             .on("error", (error) => {
                 console.log({ statusCode: 500 });
-                res.write({ statusCode: 500 });
+                res.send({ statusCode: 500 });
             });
     } catch (error) {
         console.log(error);
-        res.write({
+        res.send({
             statusCode: 500,
             body: JSON.stringify({ error: "Failed fetching the link." }),
         });
